@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -exo pipefail
 
+host="$1"
 IFS="" read -r -p "Enter license key: " -s key
 if [[ ! "$key" =~ ^[0-9a-zA-Z]{64}$ ]]; then
     >&2 echo "Invalid license key."
@@ -8,7 +9,7 @@ if [[ ! "$key" =~ ^[0-9a-zA-Z]{64}$ ]]; then
 fi
 
 dockerComposeFile="docker-compose.yml"
-dockerComposeFileSha256="52a131107cb93e20491566277514d8bce017b807ca0ba27ebfeef54a68fbf1eb"
+dockerComposeFileSha256="0e59080b852118c3392da0ed9eb7f67abdb5885172c4060e9eedc1de9c68957e"
 if [[ -f "$dockerComposeFile" ]]; then
     >&2 echo "$dockerComposeFile already exists."
     exit 2
@@ -20,15 +21,22 @@ password="${key:32:32}"
 sudo apt-get update
 sudo apt-get -y install docker.io docker-compose nginx certbot python3-certbot-nginx
 #sudo usermod -a -G docker "$USER"
+
 echo "$password" | sudo docker login -u "$username" --password-stdin registry.everytrade.io
-curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/7a45bf7e1b585af3cca8dcbf89061752958aabbf/docker-compose.yml" -o "$dockerComposeFile"
+
+curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/01373871596d0e46d724b960fbadde73a0a79130/docker-compose.yml" -o "$dockerComposeFile"
 sha256sum "$dockerComposeFile" | grep "$dockerComposeFileSha256"
 sudo docker-compose pull
+
+if [[ -z "$host" ]]; then
+    host=$(ip route get 8.8.8.8 | head -1 | awk '{print $7}')
+fi
+export EVERYTRADE_INSTALL_HOST="$host"
 sudo docker-compose up -d
 
-sudo tee /etc/nginx/sites-available/everytrade > /dev/null <<'EOF'
-limit_req_zone $binary_remote_addr zone=req_limit_per_ip:10m rate=10r/s;
-limit_conn_zone $binary_remote_addr zone=conn_limit_per_ip:10m;
+sudo tee /etc/nginx/sites-available/everytrade > /dev/null <<EOF
+limit_req_zone \$binary_remote_addr zone=req_limit_per_ip:10m rate=10r/s;
+limit_conn_zone \$binary_remote_addr zone=conn_limit_per_ip:10m;
 server {
         listen 80 default_server;
         listen [::]:80 default_server;
@@ -37,7 +45,7 @@ server {
         # Add index.php to the list if you are using PHP
         index index.html index.htm index.nginx-debian.html;
 
-        server_name _;
+        server_name $host;
 
         location / {
                 include /etc/nginx/proxy_params;
