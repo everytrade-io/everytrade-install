@@ -31,8 +31,7 @@ sudo docker-compose pull
 if [[ -z "$host" ]]; then
     host=$(ip route get 8.8.8.8 | head -1 | awk '{print $7}')
 fi
-export EVERYTRADE_INSTALL_HOST="$host"
-sudo docker-compose up -d
+sudo EVERYTRADE_INSTALL_HOST="$host" docker-compose up -d
 
 sudo tee /etc/nginx/sites-available/everytrade > /dev/null <<EOF
 limit_req_zone \$binary_remote_addr zone=req_limit_per_ip:10m rate=10r/s;
