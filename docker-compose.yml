@@ -11,6 +11,7 @@ services:
             EVERYTRADE_DB_USER: everytrade
             EVERYTRADE_DB_PASSWORD: everytrade
             EVERYTRADE_INSTALL_HOST:
+            EVERYTRADE_INSTALL_ON_PREMISE: 'true'
         depends_on:
             - db
         restart: unless-stopped
