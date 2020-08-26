@@ -55,6 +55,7 @@ server {
         location / {
                 include /etc/nginx/proxy_params;
                 proxy_pass http://localhost:8080;
+                gzip_types *;
 
                 limit_req zone=req_limit_per_ip burst=60 nodelay;
                 limit_conn conn_limit_per_ip 60;
