@@ -26,5 +26,5 @@ curl -s -O https://raw.githubusercontent.com/everytrade-io/everytrade-install/ma
 # everytrade upgrade
 
 ```shell
-curl -s -O https://raw.githubusercontent.com/everytrade-io/everytrade-install/master/upgrade.sh && bash upgrade.sh
+curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/master/upgrade.sh | bash
 ```
