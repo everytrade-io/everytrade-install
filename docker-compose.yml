@@ -1,9 +1,9 @@
 version: "3.7"
 services:
     webapp:
-        image: registry.everytrade.io/webapp:2020-08-31
+        image: registry.everytrade.io/webapp:2020-09-04
         volumes:
-            - webapp-data:/opt/jboss/everytrade
+            - webapp-data:/opt/jboss/everytrade/volatile
         ports:
             - "127.0.0.1:8080:8080"
         environment:
