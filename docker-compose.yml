@@ -1,7 +1,7 @@
 version: "3.7"
 services:
     webapp:
-        image: registry.everytrade.io/webapp:2020-09-04
+        image: registry.everytrade.io/everytrade-webapp:2020-09-04
         volumes:
             - webapp-data:/opt/jboss/everytrade/volatile
         ports:
@@ -16,7 +16,7 @@ services:
             - db
         restart: unless-stopped
     db:
-        image: registry.everytrade.io/mysql:8.0.21
+        image: registry.everytrade.io/everytrade-mysql:8.0.21
         volumes:
             - db-data:/var/lib/mysql
         expose:
