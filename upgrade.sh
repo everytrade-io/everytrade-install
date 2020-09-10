@@ -38,5 +38,5 @@ curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/$docker
       fi
   ) > "$dockerComposeFile"
 #sha256sum "$dockerComposeFile" | grep "$dockerComposeFileSha256"
-docker-compose pull
-docker-compose up -d
+docker-compose -p everytrade pull
+docker-compose -p everytrade up -d
