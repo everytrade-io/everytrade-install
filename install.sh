@@ -104,6 +104,7 @@ if [[ -f /etc/nginx/sites-enabled/default ]]; then
 fi
 sudo ln -sf /etc/nginx/sites-available/everytrade /etc/nginx/sites-enabled/everytrade
 sudo systemctl reload nginx.service
+rm docker-compose.yml
 
 echo
 echo
