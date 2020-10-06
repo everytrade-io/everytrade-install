@@ -1,4 +1,5 @@
-# everytrade installation
+_This repository contains all necessary files and instructions to perform on-premise installation of Everytrade product_.
+# Everytrade Installation
 
 1. Create a droplet at DigitalOcean. Select Ubuntu 20.04 as image. Choose at least 4GB RAM. Choose a password or SSH key (recommended) and give name to your droplet.
 2. Go to your terminal and log into your droplet: `ssh root@droplet-ip` with the IP address of the droplet substituted for `droplet-ip`.
@@ -11,7 +12,7 @@ curl -s -O https://raw.githubusercontent.com/everytrade-io/everytrade-install/ma
 5. When the script is finished (it takes few minutes) you can paste your droplet's IP address into your browser. The page will take a some time to load (the application is initializing data). After few more minutes the EveryTrade page will load and subsequent page loads will be almost instant.
 6. Application is now up and running but not secured with HTTPS. To setup HTTPS (via https://letsencrypt.org/) follow optional procedure bellow.
 
-### HTTPS setup (optional / advanced)
+### HTTPS setup (optional but recommended / advanced)
 
 1. This guide assumes domain et.example.com. Use your actual domain name throughout the guide instead.
 2. Create a DNS type A record pointing to your droplet's IP address at Digital Ocean (or other DNS provider in case you don't use Digital Ocean).
@@ -23,8 +24,9 @@ curl -s -O https://raw.githubusercontent.com/everytrade-io/everytrade-install/ma
 6. Restart your docker container by running `sudo docker restart everytrade_webapp_1`.
 7. Use your browser to load et.example.com. From now on your connection should be securew using an HTTPS certificate from Let's Encrypt (depicted by a lock icon in your browser's address bar).
 
-# everytrade upgrade
-
+# Everytrade upgrade
+Upgrading everytrade is easy. All you need to do is to run following script and your installation will be upgraded to the latest version.
+There is no need to backup any data.
 ```shell
 curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/master/upgrade.sh | bash
 ```
