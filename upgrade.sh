@@ -39,8 +39,8 @@ curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/$docker
   ) > "$dockerComposeFile"
 #sha256sum "$dockerComposeFile" | grep "$dockerComposeFileSha256"
 if [[ -n "$DOCKER_HOST" ]]; then
-    alias sudo=''
+    SUDO="sudo"
 fi
-sudo docker-compose -p everytrade pull
-sudo docker-compose -p everytrade up -d
+$SUDO docker-compose -p everytrade pull
+$SUDO docker-compose -p everytrade up -d
 rm docker-compose.yml
