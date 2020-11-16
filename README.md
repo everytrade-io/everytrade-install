@@ -31,8 +31,12 @@ _This repository contains all necessary files and instructions to perform on-pre
 1. Use your browser to load et.example.com. From now on you should be able to use your Google accounts for signup or login.
 
 # Everytrade upgrade
-Upgrading everytrade is easy. All you need to do is to run following script and your installation will be upgraded to the latest version.
+Upgrading everytrade to the latest version is easy. All you need to do is to run following script and your installation will be upgraded to the latest version.
 There is no need to backup any data.
 ```shell
 curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/master/upgrade.sh | bash
+```
+To upgrade to a specific version use a sightly modified command (don't forget to substitute VERSION_NUMBER with the actual version you want to upgrade to):
+```shell
+curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/master/upgrade.sh | bash -s -- --version VERSION_NUMBER
 ```
