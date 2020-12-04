@@ -1,5 +1,5 @@
 _This repository contains all necessary files and instructions to perform on-premise installation of Everytrade product_.
-# Everytrade Installation
+# Everytrade installation
 
 1. Create a droplet at DigitalOcean. Select Ubuntu 20.04 as image. Choose at least 4GB RAM. Choose a password or SSH key (recommended) and give name to your droplet.
 1. Go to your terminal and log into your droplet: `ssh root@droplet-ip` with the IP address of the droplet substituted for `droplet-ip`.
@@ -39,4 +39,38 @@ curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/maste
 To upgrade to a specific version use a sightly modified command (don't forget to substitute VERSION_NUMBER with the actual version you want to upgrade to):
 ```shell
 curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/master/upgrade.sh | bash -s -- --version VERSION_NUMBER
+```
+
+# Everytrade uninstall
+
+Delete certbot configuration for your domain in case out decided to go for the HTTPS setup (substitute `et.example.com` with your domain/certificate name):
+```Shell
+certbot delete --cert-name et.example.com
+```
+
+If you're not sure about your certificate name, you can list all the certbot managed certificates:
+```Shell
+certbot certificates
+```
+
+To remove nginx reverse-proxy configuration for Everytrade, run:
+```Shell
+rm /etc/nginx/sites-available/everytrade
+rm /etc/nginx/sites-enabled/everytrade
+systemctl reload nginx.service
+```
+
+To stop the docker containers running Everytrade webapp and database, run:
+```Shell
+docker container stop everytrade_webapp_1
+docker container rm everytrade_webapp_1
+docker container stop everytrade_db_1
+docker container rm everytrade_db_1
+```
+
+Now there are no more Everytrade-related processes running, but there's still some runtime data left (configuration files, database content, etc.)
+To remove those, run:
+```Shell
+docker volume rm everytrade_webapp-data
+docker volume rm everytrade_db-data
 ```
