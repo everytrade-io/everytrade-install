@@ -84,6 +84,8 @@ server {
 
         server_name $host;
 
+        add_header X-Frame-Options DENY always;
+
         location / {
                 include /etc/nginx/proxy_params;
                 proxy_pass http://localhost:8080;
