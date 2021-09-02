@@ -1,7 +1,7 @@
 version: "3.7"
 services:
     webapp:
-        image: registry.everytrade.io/everytrade-webapp:2021-08-26T1319
+        image: registry.everytrade.io/everytrade-webapp:2021-09-02T1320
         volumes:
             - webapp-data:/opt/jboss/everytrade/volatile
         ports:
