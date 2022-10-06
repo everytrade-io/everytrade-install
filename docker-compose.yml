@@ -1,9 +1,9 @@
-version: "3.7"
+version: "3.9"
 services:
     webapp:
         image: registry.everytrade.io/everytrade-webapp:2022-10-05T1201
         volumes:
-            - webapp-data:/opt/jboss/everytrade/volatile
+            - webapp-data:/root/whalebooks/volatile
         ports:
             - "127.0.0.1:8080:8080"
         environment:
@@ -13,7 +13,8 @@ services:
             EVERYTRADE_INSTALL_HOST:
             EVERYTRADE_INSTALL_ON_PREMISE: 'true'
         depends_on:
-            - db
+            db:
+                condition: service_healthy
         logging:
             driver: json-file
             options:
@@ -38,9 +39,11 @@ services:
                 max-size: "10M"
                 max-file: "10"
                 compress: "true"
+        healthcheck:
+            test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+            timeout: 10s
+            retries: 10
         restart: unless-stopped
-#    debug:
-#        image: registry.everytrade.io/ubuntu:20.04
 volumes:
     db-data:
     webapp-data:
