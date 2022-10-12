@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.7"
 services:
     webapp:
         image: registry.everytrade.io/everytrade-webapp:2022-10-05T1201
@@ -13,8 +13,7 @@ services:
             EVERYTRADE_INSTALL_HOST:
             EVERYTRADE_INSTALL_ON_PREMISE: 'true'
         depends_on:
-            db:
-                condition: service_healthy
+            - db
         logging:
             driver: json-file
             options:
