@@ -9,7 +9,7 @@ services:
         environment:
             EVERYTRADE_DB_HOST: pgdb
             EVERYTRADE_DB_USER: whalebooks
-            EVERYTRADE_DB_PASSWORD: whalebooks
+            EVERYTRADE_DB_PASSWORD: ${POSTGRES_PASSWORD:?err}
             EVERYTRADE_INSTALL_HOST:
             EVERYTRADE_INSTALL_ON_PREMISE: 'true'
             SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
