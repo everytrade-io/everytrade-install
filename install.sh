@@ -19,29 +19,36 @@ while [[ $# -gt 0 ]]; do
             shift # past argument
             shift # past value
         ;;
+        --install-commit)
+            INSTALL_COMMIT="$2"
+            shift # past argument
+            shift # past value
+        ;;
     esac
 done
 
 if [[ -z "$host" ]]; then
-    host=$(ip route get 8.8.8.8 | head -1 | awk '{print $7}')
+  host=$(ip route get 8.8.8.8 | head -1 | awk '{print $7}')
 fi
 
 if [[ -z "$image" ]]; then
-    image="everytrade-webapp"
+  image="everytrade-webapp"
 fi
 
-dockerComposeFile="docker-compose.yml"
-dockerComposeFileCommit="master"
-#dockerComposeFileSha256="f789db6d327d0664e452cca266fb197d3d6baa3d4c5899ef5b2d78af2b052052"
-if [[ -f "$dockerComposeFile" ]]; then
-    >&2 echo "$dockerComposeFile already exists."
-    exit 1
+if [[ -z "${INSTALL_COMMIT}" ]]; then
+  INSTALL_COMMIT="master"
 fi
-if [[ -f /etc/nginx/sites-enabled/everytrade ]]; then 
+
+DOCKER_COMPOSE_FILE="docker-compose.yml"
+if [[ -f "${DOCKER_COMPOSE_FILE}" ]]; then
+  >&2 echo "${DOCKER_COMPOSE_FILE} already exists."
+  exit 1
+fi
+if [[ -f /etc/nginx/sites-enabled/everytrade ]]; then
     >&2 echo "/etc/nginx/sites-enabled/everytrade already exists."
     exit 1
 fi
-if [[ -f /etc/nginx/sites-available/everytrade ]]; then 
+if [[ -f /etc/nginx/sites-available/everytrade ]]; then
     >&2 echo "/etc/nginx/sites-available/everytrade already exists."
     exit 1
 fi
@@ -76,15 +83,15 @@ function check_password() {
   echo "POSTGRES_PASSWORD=$(cat $PG_PASSWORD_FILE)" >.env
 }
 
-curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/$dockerComposeFileCommit/docker-compose.yml" | \
+curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/docker-compose.yml" |
   (
-      if [[ -z "$version" ]]; then
-          sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$image:\2/"
-      else
-          sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$image:$version/"
-      fi
-  ) > "$dockerComposeFile"
-#sha256sum "$dockerComposeFile" | grep "$dockerComposeFileSha256"
+    if [[ -z "$version" ]]; then
+      sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$image:\2/"
+    else
+      sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$image:$version/"
+    fi
+  ) >"${DOCKER_COMPOSE_FILE}"
+
 echo "$password" | sudo docker login -u "$username" --password-stdin registry.everytrade.io
 sudo docker-compose -p everytrade pull
 check_password
@@ -121,7 +128,7 @@ server {
 }
 EOF
 if [[ -f /etc/nginx/sites-enabled/default ]]; then
-    sudo rm /etc/nginx/sites-enabled/default
+  sudo rm /etc/nginx/sites-enabled/default
 fi
 sudo ln -sf /etc/nginx/sites-available/everytrade /etc/nginx/sites-enabled/everytrade
 sudo systemctl reload nginx.service
