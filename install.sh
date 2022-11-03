@@ -58,6 +58,24 @@ sudo apt-get update
 sudo apt-get -y install docker.io docker-compose nginx certbot python3-certbot-nginx
 #sudo usermod -a -G docker "$USER"
 
+PG_PASSWORD_DIR=/run/secrets
+PG_PASSWORD_FILE=${PG_PASSWORD_DIR}/pg
+function check_password() {
+  if [ ! -f "${PG_PASSWORD_FILE}" ]; then
+    echo "!!! Be sure to make backup of your database password. We have no way how to get to your data without your password !!!"
+    echo "Please enter your new database password:"
+    read -s -r PASSWORD
+    mkdir -p ${PG_PASSWORD_DIR}
+    touch ${PG_PASSWORD_FILE}
+    echo "${PASSWORD}" >${PG_PASSWORD_FILE}
+  else
+    echo "Using existing password from ${PG_PASSWORD_FILE}"
+  fi
+
+  touch .env
+  echo "POSTGRES_PASSWORD=$(cat $PG_PASSWORD_FILE)" >.env
+}
+
 curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/$dockerComposeFileCommit/docker-compose.yml" | \
   (
       if [[ -z "$version" ]]; then
@@ -69,6 +87,7 @@ curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/$docker
 #sha256sum "$dockerComposeFile" | grep "$dockerComposeFileSha256"
 echo "$password" | sudo docker login -u "$username" --password-stdin registry.everytrade.io
 sudo docker-compose -p everytrade pull
+check_password
 sudo EVERYTRADE_INSTALL_HOST="$host" docker-compose -p everytrade up -d
 
 sudo tee /etc/nginx/sites-available/everytrade > /dev/null <<EOF
@@ -106,7 +125,7 @@ if [[ -f /etc/nginx/sites-enabled/default ]]; then
 fi
 sudo ln -sf /etc/nginx/sites-available/everytrade /etc/nginx/sites-enabled/everytrade
 sudo systemctl reload nginx.service
-rm docker-compose.yml
+rm .env docker-compose.yml
 
 echo
 echo

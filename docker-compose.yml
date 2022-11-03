@@ -14,7 +14,7 @@ services:
             EVERYTRADE_INSTALL_ON_PREMISE: 'true'
             SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
         depends_on:
-            - db
+            - pgdb
         logging:
             driver: json-file
             options:
@@ -22,17 +22,16 @@ services:
                 max-file: "20"
                 compress: "true"
         restart: unless-stopped
-    db:
-        image: registry.everytrade.io/everytrade-mysql:8.0.21
+    pgdb:
+        image: registry.everytrade.io/whalebooks-pgdb:2022-10-31
         volumes:
-            - db-data:/var/lib/mysql
+            - db-data:/var/lib/postgresql
         expose:
-            - "3306"
+            - "5432"
         environment:
-            MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-            MYSQL_DATABASE: everytrade
-            MYSQL_USER: everytrade
-            MYSQL_PASSWORD : everytrade
+            POSTGRES_DB: ${POSTGRES_DB:-whalebooks}
+            POSTGRES_USER: ${POSTGRES_USER:-whalebooks}
+            POSTGRES_PASSWORD : ${POSTGRES_PASSWORD:?err}
         logging:
             driver: json-file
             options:
