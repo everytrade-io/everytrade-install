@@ -7,9 +7,9 @@ services:
         ports:
             - "127.0.0.1:8080:8080"
         environment:
-            EVERYTRADE_DB_HOST: db
-            EVERYTRADE_DB_USER: everytrade
-            EVERYTRADE_DB_PASSWORD: everytrade
+            EVERYTRADE_DB_HOST: pgdb
+            EVERYTRADE_DB_USER: whalebooks
+            EVERYTRADE_DB_PASSWORD: whalebooks
             EVERYTRADE_INSTALL_HOST:
             EVERYTRADE_INSTALL_ON_PREMISE: 'true'
             SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
