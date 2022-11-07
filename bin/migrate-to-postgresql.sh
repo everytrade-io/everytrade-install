@@ -45,7 +45,7 @@ function check_environment() {
   fi
 
   if ! command -v mysql &>/dev/null; then
-    apt update && apt install -y mysql-client
+    $SUDO apt update && apt install -y mysql-client
   fi
 
   #check DB version
@@ -82,8 +82,7 @@ function confirm_by_user() {
 
 function prepare_environment() {
   # install prerequisites
-  apt update && apt install -y jq npm unzip mysql-client
-
+  $SUDO apt update && apt install -y jq npm unzip mysql-client
   mkdir -p migration-workdir && cd ./migration-workdir
 
   #download compose file
@@ -103,9 +102,9 @@ function check_password() {
     echo "!!! Be sure to make backup of your database password. We have no way how to get to your data without your password !!!"
     echo "Please enter your new database password:"
     read -s -r PASSWORD </dev/tty
-    mkdir -p ${PG_PASSWORD_DIR}
-    touch ${PG_PASSWORD_FILE}
-    echo "${PASSWORD}" >${PG_PASSWORD_FILE}
+    $SUDO mkdir -p ${PG_PASSWORD_DIR}
+    $SUDO touch ${PG_PASSWORD_FILE}
+    $SUDO echo "${PASSWORD}" > ${PG_PASSWORD_FILE}
   else
     echo "Using existing password from ${PG_PASSWORD_FILE}"
   fi
