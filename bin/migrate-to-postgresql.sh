@@ -66,13 +66,13 @@ function confirm_by_user() {
   echo "!!! Please be sure to make backup of your current database before proceeding !!!"
   echo "!!! Old database will be stopped but not deleted for possible problems and for need of migration revert. !!!"
   echo
-  read -p "Please confirm you have backup of your database (y/n)?" -r
+  read -r -p "Please confirm you have backup of your database (y/n)?" REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" == "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
   fi
 
   echo
-  read -p "Are you sure you want to continue with upgrade (y/n)?" -r
+  read -r -p "Are you sure you want to continue with upgrade (y/n)?" REPLY
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" == "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
   fi
