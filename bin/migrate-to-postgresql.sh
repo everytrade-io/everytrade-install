@@ -20,6 +20,7 @@ NMIG_DIR=nmig-${NMIG_COMMIT}
 
 PG_CONTAINER_NAME=everytrade_pgdb_1
 MYSQL_CONTAINER_NAME=everytrade_db_1
+WEBAPP_CONTAINER_NAME=everytrade_webapp_1
 
 PG_PASSWORD_DIR=/run/secrets
 PG_PASSWORD_FILE=${PG_PASSWORD_DIR}/pg
@@ -94,7 +95,7 @@ function prepare_environment() {
   curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/docker-compose.yml" > "${DOCKER_COMPOSE_FILE}"
 
   echo "stopping webapp"
-  $SUDO docker-compose -p everytrade stop webapp
+  $SUDO docker stop ${WEBAPP_CONTAINER_NAME}
 }
 
 function check_password() {
