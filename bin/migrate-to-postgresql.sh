@@ -102,7 +102,7 @@ function check_password() {
   if [ ! -f "${PG_PASSWORD_FILE}" ]; then
     echo "!!! Be sure to make backup of your database password. We have no way how to get to your data without your password !!!"
     echo "Please enter your new database password:"
-    read -s -r PASSWORD </dev/tty
+    read -r PASSWORD </dev/tty
     $SUDO mkdir -p ${PG_PASSWORD_DIR}
     $SUDO touch ${PG_PASSWORD_FILE}
     $SUDO echo "${PASSWORD}" > ${PG_PASSWORD_FILE}
