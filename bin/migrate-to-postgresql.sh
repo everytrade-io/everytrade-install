@@ -66,13 +66,14 @@ function confirm_by_user() {
   echo "!!! Please be sure to make backup of your current database before proceeding !!!"
   echo "!!! Old database will be stopped but not deleted for possible problems and for need of migration revert. !!!"
   echo
-  read -r -p "Please confirm you have backup of your database (y/n)?" REPLY
+
+  read -r -p "Please confirm you have backup of your database (y/n)?" REPLY </dev/tty
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" == "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
   fi
 
   echo
-  read -r -p "Are you sure you want to continue with upgrade (y/n)?" REPLY
+  read -r -p "Are you sure you want to continue with upgrade (y/n)?" REPLY </dev/tty
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" == "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
   fi
@@ -101,7 +102,7 @@ function check_password() {
   if [ ! -f "${PG_PASSWORD_FILE}" ]; then
     echo "!!! Be sure to make backup of your database password. We have no way how to get to your data without your password !!!"
     echo "Please enter your new database password:"
-    read -s -r PASSWORD
+    read -s -r PASSWORD </dev/tty
     mkdir -p ${PG_PASSWORD_DIR}
     touch ${PG_PASSWORD_FILE}
     echo "${PASSWORD}" >${PG_PASSWORD_FILE}
