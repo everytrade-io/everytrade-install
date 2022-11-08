@@ -10,12 +10,12 @@ while [[ $# -gt 0 ]]; do
             shift # past value
         ;;
         --image)
-            image="$2"
+            IMAGE="$2"
             shift # past argument
             shift # past value
         ;;
         --version)
-            version="$2"
+            VERSION="$2"
             shift # past argument
             shift # past value
         ;;
@@ -29,10 +29,6 @@ done
 
 if [[ -z "$host" ]]; then
   host=$(ip route get 8.8.8.8 | head -1 | awk '{print $7}')
-fi
-
-if [[ -z "$image" ]]; then
-  image="everytrade-webapp"
 fi
 
 if [[ -z "${INSTALL_COMMIT}" ]]; then
@@ -80,17 +76,12 @@ function check_db_password() {
   fi
 
   touch .env
-  echo "POSTGRES_PASSWORD=$(cat $PG_PASSWORD_FILE)" >.env
+  echo "POSTGRES_PASSWORD=$(cat $PG_PASSWORD_FILE)" > .env
+  echo "WHALEBOOKS_VERSION=${VERSION}" >> .env
+  echo "WHALEBOOKS_IMAGE=${IMAGE}" >> .env
 }
 
-curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/docker-compose.yml" |
-  (
-    if [[ -z "$version" ]]; then
-      sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$image:\2/"
-    else
-      sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$image:$version/"
-    fi
-  ) >"${DOCKER_COMPOSE_FILE}"
+curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/docker-compose.yml" >"${DOCKER_COMPOSE_FILE}"
 
 check_db_password
 echo "$password" | sudo docker login -u "$username" --password-stdin registry.everytrade.io

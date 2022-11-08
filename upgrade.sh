@@ -52,14 +52,7 @@ if [[ -f "${DOCKER_COMPOSE_FILE}" ]]; then
     exit 2
 fi
 
-curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/docker-compose.yml" | \
-  (
-      if [[ -z "$VERSION" ]]; then
-          sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$IMAGE:\2/"
-      else
-          sed -e "s/^\(\s*image: registry\.everytrade\.io\/\)everytrade-webapp:\(.*\)$/\1$IMAGE:$VERSION/"
-      fi
-  ) > "${DOCKER_COMPOSE_FILE}"
+curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/docker-compose.yml" > "${DOCKER_COMPOSE_FILE}"
 
 if [ "$(whoami)" == "ci" ]; then
     SUDO=""
@@ -67,7 +60,10 @@ elif [[ -z "$DOCKER_HOST" ]]; then
     SUDO="sudo"
 fi
 
-touch .env && echo "POSTGRES_PASSWORD=$(cat /run/secrets/pg)" >.env
+touch .env &&
+echo "POSTGRES_PASSWORD=$(cat /run/secrets/pg)" >.env
+echo "WHALEBOOKS_VERSION=${VERSION}" >> .env
+echo "WHALEBOOKS_IMAGE=${IMAGE}" >> .env
 
 $SUDO docker-compose -p everytrade pull
 $SUDO docker-compose -p everytrade up -d
