@@ -32,6 +32,7 @@ if ! [ "$(docker ps -q -f name=${PG_CONTAINER_NAME})" ]; then
   curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/bin/migrate-to-postgresql.sh" > migrate-to-postgresql.sh
   chmod +x ./migrate-to-postgresql.sh
   ./migrate-to-postgresql.sh --install-commit ${INSTALL_COMMIT}
+  rm ./migrate-to-postgresql.sh
 
   RESULT=$?
   if [ $RESULT -ne 0 ]; then
