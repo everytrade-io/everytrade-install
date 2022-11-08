@@ -60,7 +60,9 @@ curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTA
       fi
   ) > "${DOCKER_COMPOSE_FILE}"
 
-if [[ -z "$DOCKER_HOST" ]]; then
+if [ "$(whoami)" == "ci" ]; then
+    SUDO=""
+elif [[ -z "$DOCKER_HOST" ]]; then
     SUDO="sudo"
 fi
 
