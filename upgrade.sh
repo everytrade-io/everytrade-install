@@ -19,6 +19,11 @@ while [[ $# -gt 0 ]]; do
             shift # past argument
             shift # past value
         ;;
+        --webapp-memory-limit)
+            WEBAPP_MEMORY_LIMIT="$2"
+            shift # past argument
+            shift # past value
+        ;;
     esac
 done
 
@@ -64,6 +69,10 @@ touch .env &&
 echo "POSTGRES_PASSWORD=$(cat /run/secrets/pg)" >.env
 echo "WHALEBOOKS_VERSION=${VERSION}" >> .env
 echo "WHALEBOOKS_IMAGE=${IMAGE}" >> .env
+if [[ -n "${WEBAPP_MEMORY_LIMIT}" ]]; then
+  echo "WEBAPP_MEMORY_LIMIT=${WEBAPP_MEMORY_LIMIT}" >> .env
+fi
+
 
 $SUDO docker-compose -p everytrade pull
 $SUDO docker-compose -p everytrade up -d
