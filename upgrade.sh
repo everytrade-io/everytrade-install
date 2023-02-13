@@ -75,5 +75,5 @@ fi
 
 
 $SUDO docker-compose -p everytrade pull
-$SUDO docker-compose -p everytrade up -d
+$SUDO docker-compose --compatibility -p everytrade up -d
 rm .env docker-compose.yml
