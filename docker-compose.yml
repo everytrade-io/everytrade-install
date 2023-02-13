@@ -25,7 +25,7 @@ services:
         deploy:
             resources:
                 limits:
-                    memory: ${WEBAPP_MEMORY_LIMIT:10g}
+                    memory: ${WEBAPP_MEMORY_LIMIT:-10g}
     pgdb:
         image: registry.everytrade.io/whalebooks-pgdb:2022-10-31
         volumes:
