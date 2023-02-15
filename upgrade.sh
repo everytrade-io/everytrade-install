@@ -74,6 +74,7 @@ if [[ -n "${WEBAPP_MEMORY_LIMIT}" ]]; then
 fi
 
 
+$SUDO docker stop everytrade_webapp_1
 $SUDO docker-compose -p everytrade pull
 $SUDO docker-compose --compatibility -p everytrade up -d
 rm .env docker-compose.yml
