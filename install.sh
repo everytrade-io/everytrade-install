@@ -61,7 +61,7 @@ sudo apt-get update
 sudo apt-get -y install docker.io docker-compose nginx certbot python3-certbot-nginx
 #sudo usermod -a -G docker "$USER"
 
-PG_PASSWORD_DIR=/run/secrets
+PG_PASSWORD_DIR=/etc/secrets
 PG_PASSWORD_FILE=${PG_PASSWORD_DIR}/pg
 function check_db_password() {
   if [ ! -f "${PG_PASSWORD_FILE}" ]; then
