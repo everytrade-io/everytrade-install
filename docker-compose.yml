@@ -28,7 +28,7 @@ services:
                     memory: ${WEBAPP_MEMORY_LIMIT:-10g}
     pgdb:
         image: registry.everytrade.io/whalebooks-pgdb:2022-10-31
-        shm_size: 4gb
+        shm_size: 1gb
         volumes:
             - db-data:/var/lib/postgresql
         expose:
