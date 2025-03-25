@@ -66,7 +66,7 @@ elif [[ -z "$DOCKER_HOST" ]]; then
 fi
 
 touch .env &&
-echo "POSTGRES_PASSWORD=$(cat /run/secrets/pg)" >.env
+echo "POSTGRES_PASSWORD=$(cat /etc/secrets/pg)" >.env
 echo "WHALEBOOKS_VERSION=${VERSION}" >> .env
 echo "WHALEBOOKS_IMAGE=${IMAGE}" >> .env
 if [[ -n "${WEBAPP_MEMORY_LIMIT}" ]]; then
