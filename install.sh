@@ -58,7 +58,7 @@ username="user-${key:0:32}"
 password="${key:32:32}"
 
 sudo apt-get update
-sudo apt-get -y install docker.io docker-compose nginx certbot python3-certbot-nginx
+sudo apt-get -y install docker.io docker-compose-plugin nginx certbot python3-certbot-nginx
 #sudo usermod -a -G docker "$USER"
 
 PG_PASSWORD_DIR=/etc/secrets
@@ -86,7 +86,7 @@ curl "https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTA
 check_db_password
 echo "$password" | sudo docker login -u "$username" --password-stdin registry.everytrade.io
 sudo docker-compose -p everytrade pull
-sudo EVERYTRADE_INSTALL_HOST="$host" docker-compose -p everytrade up -d
+sudo EVERYTRADE_INSTALL_HOST="$host" docker compose -p everytrade up -d
 
 sudo tee /etc/nginx/sites-available/everytrade > /dev/null <<EOF
 limit_req_zone \$binary_remote_addr zone=req_limit_per_ip:10m rate=10r/s;

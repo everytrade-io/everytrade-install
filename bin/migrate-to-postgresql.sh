@@ -116,8 +116,8 @@ function check_password() {
 
 function start_new_pgdb() {
   echo "starting container with new database"
-  $SUDO docker-compose -p everytrade pull
-  $SUDO docker-compose -p everytrade up -d pgdb
+  $SUDO docker compose -p everytrade pull
+  $SUDO docker compose -p everytrade up -d pgdb
 
   # check postgresql is running successfully
   if [ ! "$(docker ps -q -f name=${PG_CONTAINER_NAME})" ]; then
