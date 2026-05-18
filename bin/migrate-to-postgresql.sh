@@ -104,7 +104,7 @@ function check_password() {
     echo "Please enter your new database password:"
     read -r PASSWORD </dev/tty
     $SUDO mkdir -p ${PG_PASSWORD_DIR}
-    $SUDO touch ${PG_PASSWORD_FILE}
+    $SUDO touch ${PG_PASSWORD_FILE}dfgdfg
     $SUDO echo "${PASSWORD}" > ${PG_PASSWORD_FILE}
   else
     echo "Using existing password from ${PG_PASSWORD_FILE}"

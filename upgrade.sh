@@ -46,6 +46,28 @@ if ! [ "$(docker ps -q -f name=${PG_CONTAINER_NAME})" ]; then
   fi
 fi
 
+# Refuse to upgrade if the pgdb volume still holds a PG15 cluster — the new
+# pgdb image is PG17 and would fail to start on PG15 data files. The operator
+# must run bin/upgrade-pgdb-15-to-17.sh first.
+PG_VOLUME_NAME="everytrade_db-data"
+if docker volume inspect "${PG_VOLUME_NAME}" >/dev/null 2>&1; then
+  CLUSTER_VERSION="$(docker run --rm -v "${PG_VOLUME_NAME}:/v" alpine \
+    sh -c "cat /v/data/PG_VERSION 2>/dev/null || true")"
+  if [ "${CLUSTER_VERSION}" = "15" ]; then
+    cat >&2 <<EOF
+Detected PostgreSQL 15 data in volume ${PG_VOLUME_NAME}, but the new pgdb image
+ships PostgreSQL 17 and cannot read PG15 data files directly.
+
+Run the one-shot migration first, then re-run this upgrade:
+
+  curl -s https://raw.githubusercontent.com/everytrade-io/everytrade-install/${INSTALL_COMMIT}/bin/upgrade-pgdb-15-to-17.sh \\
+    | sudo bash -s -- --install-commit ${INSTALL_COMMIT}
+
+EOF
+    exit 3
+  fi
+fi
+
 
 if [[ -z "$IMAGE" ]]; then
     IMAGE="everytrade-webapp"
